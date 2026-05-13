@@ -4,7 +4,7 @@ import TopNavbar from "./TopNavbar";
 
 function Layout() {
   return (
-    <div className="flex min-h-screen bg-[#F9F9FF]">
+    <div className="flex flex-col md:flex-row  min-h-screen bg-[#F9F9FF]">
 
       <Sidebar />
 
