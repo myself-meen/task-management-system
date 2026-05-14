@@ -8,7 +8,7 @@ function Layout() {
 
       <Sidebar />
 
-      <div className="flex-1">
+      <div className="flex-1 mb-16 md:mb-0 md:ml-64">
 
         <TopNavbar />
 
