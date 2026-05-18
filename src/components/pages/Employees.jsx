@@ -8,6 +8,7 @@ import Button from '../ui/Button';
 import { IoFilterOutline } from "react-icons/io5";
 import AddEmployee from '../forms/AddEmployee';
 import FilterMenuEmp from '../ui/FilterSort/FilterMenuEmp';
+import PageHeader from '../ui/PageHeader';
 function Employees() {
     const[addEmployee, setAddEmployee]=useState(false);
     const[openFilter, setOpenFilter]=useState(false);
@@ -45,6 +46,7 @@ function Employees() {
     return (<>
     <PageContainer>
     <div className='flex flex-col gap-y-8'>
+        <PageHeader head='Employee Directory' subhead='Manage your organizations talent and departments'/>
         <section className='stats flex  gap-x-4 '>
             <Card   title='Total Employees' count={dummyEmployees.length}/>
             <Card  title='Departments' count='0'/>

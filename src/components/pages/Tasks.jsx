@@ -7,6 +7,7 @@ import Button from '../ui/Button';
 import { IoFilterOutline } from "react-icons/io5";
 import FilterMenuTask from '../ui/FilterSort/FilterMenuTask';
 import AddTask from '../forms/AddTask'
+import PageHeader from '../ui/PageHeader';
 function Tasks() {
     const[addTask,setAddTask]=useState(false)
     const[openFilter,setOpenFilter]=useState(false);
@@ -39,7 +40,9 @@ function Tasks() {
 
     return ( <>
     <PageContainer>
+       
     <div className='flex flex-col gap-y-8'>
+         <PageHeader head='Task Management' subhead='Oversee and track all organizational activities in real-time'/>
         <section className='stats flex  gap-x-4 '>
             <Card   title='Total' count={dummyTasks.length}/>
             <Card  title='Pending' count='0'/>

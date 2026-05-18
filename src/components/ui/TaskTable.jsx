@@ -33,22 +33,22 @@ function TaskTable({ tasks = [] }) {
             
             {tasks.map((task) => (
               <tr key={task.id} className="hover:bg-gray-50 ">
-                <td className="py-2 px-4 border-b border-[#C3C6D4] ">{task.name}</td>
-                <td className="py-2 px-4 border-b border-[#C3C6D4]">
+                <td className="py-4 px-4 border-b border-[#C3C6D4] ">{task.name}</td>
+                <td className="py-4 px-4 border-b border-[#C3C6D4]">
                   <Badge stat={task.priority} />
                 </td>
-                <td className="py-2 px-4 border-b border-[#C3C6D4]">
+                <td className="py-4 px-4 border-b border-[#C3C6D4]">
                   <Badge stat={task.status} />
                 </td>
-                <td className="py-2 px-4 border-b border-[#C3C6D4]">
+                <td className="py-4 px-4 border-b border-[#C3C6D4]">
                   <span>{task.dueDate}</span>
                 </td>
-                <td className="py-2 px-4 border-b border-[#C3C6D4]" >
+                <td className="py-4 px-4 border-b border-[#C3C6D4] flex items-center gap-2" >
                      <Avatar employee_name={task.assignee}/>
                      <span>{task.assignee}</span>
                 </td>
                 {/* Added 'relative' so the dropdown anchors to this cell */}
-                <td className="py-2 px-4 border-b border-[#C3C6D4] relative">
+                <td className="py-4 px-4 border-b border-[#C3C6D4] relative">
                   <button onClick={() => setOpenMenuId(openMenuId === task.id ? null : task.id)}>
                     <BsThreeDotsVertical/>
                   </button>

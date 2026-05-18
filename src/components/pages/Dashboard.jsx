@@ -4,6 +4,7 @@ import PageContainer from '../layout/PageContainer';
 import Avatar from '../ui/Avatar';
 import TaskTable from '../ui/TaskTable';
 import Card from '../ui/Card';
+import PageHeader from '../ui/PageHeader';
 
 function Dashboard() {
     const dummyTasks = [
@@ -37,6 +38,7 @@ function Dashboard() {
     
     <PageContainer>
 <div className='flex flex-col gap-y-8'>
+    <PageHeader head='Dashboard' subhead='Oversee statistics and most recent activity'/>
         <section className='stats flex  gap-x-4 '>
             <Card   title='Total' count={dummyTasks.length}/>
             <Card  title='Completed' count='0'/>
