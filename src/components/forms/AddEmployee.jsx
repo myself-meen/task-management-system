@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '../ui/Modal';
-function AddEmployee() {
+function AddEmployee({onClose}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -53,7 +53,7 @@ function AddEmployee() {
         
         {/* Footer Section */}
         <div className="bg-[#F2F3FB] border-t border-[#C3C6D4] -mb-6 -mx-6 mt-6 p-4 px-6 rounded-b-lg flex justify-end gap-3">
-            <button type="button" className="px-4 py-2 border border-[#C3C6D4] bg-white text-[#434652] rounded-md text-sm font-medium hover:bg-gray-50 transition-colors">Cancel</button>
+            <button onClick={onClose} type="button" className="px-4 py-2 border border-[#C3C6D4] bg-white text-[#434652] rounded-md text-sm font-medium hover:bg-gray-50 transition-colors">Cancel</button>
             <button type="submit" className="px-4 py-2 bg-[#4271D0] text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">Add Employee</button>
         </div>
     </form>

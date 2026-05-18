@@ -56,6 +56,7 @@ function TaskTable({ tasks = [] }) {
                     <ThreeDotMenu 
                       onEdit={() => { setEditingTask(task); setOpenMenuId(null); }} 
                       onDelete={() => console.log('Delete task:', task.id)} //Add Backend delete logic.
+                      onComplete={() => console.log('Complete task:', task.id)} //Add backend logic
                     />
                   )}
                 </td>

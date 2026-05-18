@@ -1,5 +1,15 @@
 import React from 'react';
+import Avatar from './Avatar';
+import { BsThreeDotsVertical } from "react-icons/bs";
+import ThreeDotMenuEmp from './ThreeDotMenuEmp';
+import EditEmployee from '../forms/EditEmployee'
+import { useState } from 'react';
+
+
 function EmployeeTable({employees=[]}) {
+  const [openMenuId, setOpenMenuId] = useState(null);
+  
+    const [editingEmployee, setEditingEmployee] = useState(null);
     return ( <>
     <div className="overflow-x-auto rounded-md">
         <table className="min-w-full bg-white border border-[#C3C6D4] ">
@@ -20,11 +30,13 @@ function EmployeeTable({employees=[]}) {
           <tbody>
             
             {employees.map((employee) => (
-              <tr key={employee.id} className="hover:bg-gray-50 text-black text-xs">
-                 <td className="py-2 px-4 border-b border-[#C3C6D4]" >
-                     <Avatar employee_name={employee.name}/>
+              <tr key={employee.id} className="hover:bg-gray-50">
+                 <td className="py-2 px-4 border-b border-[#C3C6D4] flex" >
+                     <Avatar  employee_name={employee.name}/>
+                     <span className='flex flex-col'>
                      <span>{employee.name}</span>
                      <span className='text-[#434652]'>{employee.email}</span>
+                     </span>
                 </td>
                
                 <td className="py-2 px-4 border-b border-[#C3C6D4]">
@@ -33,7 +45,18 @@ function EmployeeTable({employees=[]}) {
                  <td className="py-2 px-4 border-b border-[#C3C6D4]">
                   <span>{employee.role}</span>
                 </td>
-                <td className="py-2 px-4 border-b border-[#C3C6D4] "><button><BsThreeDotsVertical/></button></td>
+                <td className="py-2 px-4 border-b border-[#C3C6D4] "><button onClick={()=>setOpenMenuId(openMenuId === employee.id ? null : employee.id)}><BsThreeDotsVertical/></button>
+                  {openMenuId === employee.id && (
+                    <ThreeDotMenuEmp 
+                      onEdit={() => { setEditingEmployee(employee); setOpenMenuId(null); }} 
+                      onRemove={() => console.log('Delete employee:', employee.id)} //Add Backend delete logic.
+                          />
+                  )}
+                 
+                
+                
+                
+                </td>
               </tr>
             ))}
           </tbody>
@@ -52,6 +75,7 @@ function EmployeeTable({employees=[]}) {
           </tfoot>
         </table>
       </div>
+      {editingEmployee && <EditEmployee employee={editingEmployee} onClose={() => setEditingEmployee(null)} />}
     </> );
 }
 

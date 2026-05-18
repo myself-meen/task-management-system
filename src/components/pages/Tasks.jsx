@@ -1,9 +1,15 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PageContainer from '../layout/PageContainer';
 import Card from '../ui/Card';
 import TaskTable from '../ui/TaskTable';
-
+import Search from '../ui/Search';
+import Button from '../ui/Button';
+import { IoFilterOutline } from "react-icons/io5";
+import FilterMenuTask from '../ui/FilterSort/FilterMenuTask';
+import AddTask from '../forms/AddTask'
 function Tasks() {
+    const[addTask,setAddTask]=useState(false)
+    const[openFilter,setOpenFilter]=useState(false);
     const dummyTasks = [
         {
             id: 1,
@@ -40,11 +46,30 @@ function Tasks() {
             <Card  title='In Progress' count='0'/>
             <Card  title='Completed' count='0'/>
         </section>
+         <section className='flex justify-between'>
+        <Search >Search Tasks . . .</Search>
+       <div className='flex gap-4'>
+        <button className='px-4 py-2  rounded-xl
+        transition-all
+        duration-150
+        ease-in-out
+        active:scale-95 flex bg-white shadow-md gap-2 items-center' onClick={() => setOpenFilter(!openFilter)}><IoFilterOutline/> Filter</button>
+        {openFilter && <FilterMenuTask setOpenFilter={setOpenFilter}/>}
+        <button  className='px-4 py-2  rounded-xl
+        transition-all
+        duration-150
+        ease-in-out
+        active:scale-95 flex  bg-[#4271D0]
+        text-white shadow-md gap-2 items-center' onClick={() => setAddTask(!addTask)}>Add Task</button>
+       
+        </div>
+        </section>
     <section className='recent-tasks'>
 <TaskTable tasks={dummyTasks}/>
     </section>
     </div>
     </PageContainer>
+     {addTask &&(<AddTask onClose={()=>setAddTask(false)} />)}
     </> );
 }
 
