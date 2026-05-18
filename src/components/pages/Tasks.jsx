@@ -53,7 +53,7 @@ function Tasks() {
             <Card  title='In Progress' count='0'/>
             <Card  title='Completed' count='0'/>
         </section>
-         <section className='flex justify-between'>
+         <section className='flex md:justify-between gap-4'>
         <Search >Search Tasks . . .</Search>
        <div className='flex gap-4'>
         <button className='px-4 py-2  rounded-xl

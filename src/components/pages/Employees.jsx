@@ -56,7 +56,7 @@ function Employees() {
             <Card  title='Roles' count='0'/>
             
         </section>
-        <section className='flex justify-between'>
+        <section className='flex md:justify-between gap-4'>
         <Search>
           
             Search Employees . . .
