@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from '../ui/Modal';
-function AddTask() {
+
+function AddTask({ employees = [] }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -54,8 +55,10 @@ function AddTask() {
             <div>
                 <label htmlFor="assignee" className="block text-sm font-medium text-[#434652] mb-1">Assignee</label>
                 <select id="assignee" name="assignee" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
-                    <option value="john">John Doe</option>
-                    <option value="jane">Jane Smith</option>
+                    <option value="" disabled selected>Select assignee</option>
+                    {employees.map((employee) => (
+                        <option key={employee.id} value={employee.id}>{employee.name}</option>
+                    ))}
                 </select>
             </div>
         </div>

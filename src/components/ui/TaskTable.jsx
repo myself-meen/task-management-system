@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Badge from './Badge';
 import Avatar from './Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
+import ThreeDotMenu from './ThreeDotMenu';
+import EditTask from '../forms/EditTask';
 
-// We accept a 'tasks' prop and default it to an empty array so the app doesn't crash if no data is passed yet.
 function TaskTable({ tasks = [] }) {
+  // Tracks which row's menu is open
+  const [openMenuId, setOpenMenuId] = useState(null);
+  // Tracks which task is actively being edited in the modal
+  const [editingTask, setEditingTask] = useState(null);
+
     return ( <>
     <div className="overflow-x-auto rounded-md">
         <table className="min-w-full bg-white border border-[#C3C6D4] ">
@@ -38,10 +44,21 @@ function TaskTable({ tasks = [] }) {
                   <span>{task.dueDate}</span>
                 </td>
                 <td className="py-2 px-4 border-b border-[#C3C6D4]" >
-                     <Avatar/>
+                     <Avatar employee_name={task.assignee}/>
                      <span>{task.assignee}</span>
                 </td>
-                <td className="py-2 px-4 border-b border-[#C3C6D4] "><button><BsThreeDotsVertical/></button></td>
+                {/* Added 'relative' so the dropdown anchors to this cell */}
+                <td className="py-2 px-4 border-b border-[#C3C6D4] relative">
+                  <button onClick={() => setOpenMenuId(openMenuId === task.id ? null : task.id)}>
+                    <BsThreeDotsVertical/>
+                  </button>
+                  {openMenuId === task.id && (
+                    <ThreeDotMenu 
+                      onEdit={() => { setEditingTask(task); setOpenMenuId(null); }} 
+                      onDelete={() => console.log('Delete task:', task.id)} //Add Backend delete logic.
+                    />
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -60,6 +77,9 @@ function TaskTable({ tasks = [] }) {
           </tfoot>
         </table>
       </div>
+
+      {/* Render the Modal completely outside the table layout */}
+      {editingTask && <EditTask task={editingTask} onClose={() => setEditingTask(null)} />}
 </> );
 }
 

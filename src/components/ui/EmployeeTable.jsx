@@ -22,7 +22,7 @@ function EmployeeTable({employees=[]}) {
             {employees.map((employee) => (
               <tr key={employee.id} className="hover:bg-gray-50 text-black text-xs">
                  <td className="py-2 px-4 border-b border-[#C3C6D4]" >
-                     <Avatar/>
+                     <Avatar employee_name={employee.name}/>
                      <span>{employee.name}</span>
                      <span className='text-[#434652]'>{employee.email}</span>
                 </td>
