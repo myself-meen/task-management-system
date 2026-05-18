@@ -3,7 +3,7 @@ import { IoIosSearch } from "react-icons/io";
 
 function Search({ children }) {
   return (
-    <div className="relative w-1/2">
+    <div className="relative md:w-1/2">
 
       <IoIosSearch
         className="

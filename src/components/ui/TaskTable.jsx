@@ -32,23 +32,25 @@ function TaskTable({ tasks = [] }) {
           <tbody>
             
             {tasks.map((task) => (
-              <tr key={task.id} className="hover:bg-gray-50 ">
-                <td className="py-4 px-4 border-b border-[#C3C6D4] ">{task.name}</td>
-                <td className="py-4 px-4 border-b border-[#C3C6D4]">
+              <tr key={task.id} className="hover:bg-gray-50  py-4 px-4">
+                <td className="p-4 border-b border-[#C3C6D4] ">{task.name}</td>
+                <td className=" border-b border-[#C3C6D4]">
                   <Badge stat={task.priority} />
                 </td>
-                <td className="py-4 px-4 border-b border-[#C3C6D4]">
+                <td className=" border-b border-[#C3C6D4]">
                   <Badge stat={task.status} />
                 </td>
-                <td className="py-4 px-4 border-b border-[#C3C6D4]">
+                <td className=" border-b border-[#C3C6D4]">
                   <span>{task.dueDate}</span>
                 </td>
-                <td className="py-4 px-4 border-b border-[#C3C6D4] flex items-center gap-2" >
-                     <Avatar employee_name={task.assignee}/>
-                     <span>{task.assignee}</span>
+                <td className="p-4 border-b border-[#C3C6D4]" >
+                     <div className="inline-block align-middle">
+                       <Avatar employee_name={task.assignee}/>
+                     </div>
+                     <span className="inline-block align-middle">{task.assignee}</span>
                 </td>
                 {/* Added 'relative' so the dropdown anchors to this cell */}
-                <td className="py-4 px-4 border-b border-[#C3C6D4] relative">
+                <td className=" border-b border-[#C3C6D4] relative">
                   <button onClick={() => setOpenMenuId(openMenuId === task.id ? null : task.id)}>
                     <BsThreeDotsVertical/>
                   </button>

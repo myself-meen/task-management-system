@@ -5,6 +5,8 @@ import Avatar from '../ui/Avatar';
 import TaskTable from '../ui/TaskTable';
 import Card from '../ui/Card';
 import PageHeader from '../ui/PageHeader';
+import TaskCard from '../ui/TaskCard';
+import { useIsMobile } from './useIsMobile';
 
 function Dashboard() {
     const dummyTasks = [
@@ -33,20 +35,29 @@ function Dashboard() {
             assignee: "John Doe"
         }
     ];
-
+const isMobile = useIsMobile();
     return ( <>
     
     <PageContainer>
 <div className='flex flex-col gap-y-8'>
     <PageHeader head='Dashboard' subhead='Oversee statistics and most recent activity'/>
-        <section className='stats flex  gap-x-4 '>
+        <section className='stats flex flex-wrap md:justify-between gap-4'>
             <Card   title='Total' count={dummyTasks.length}/>
             <Card  title='Completed' count='0'/>
             <Card  title='Pending' count='0'/>
             <Card  title='Teams' count='0'/>
         </section>
-    <section className='recent-tasks'>
-<TaskTable tasks={dummyTasks}/>
+        <h1 className='text-2xl font-bold text-[#434652]'>Recent Tasks</h1>
+     <section className='tasks'>
+        {isMobile ? (
+            <div className="flex flex-col gap-4">
+                {dummyTasks.map(task => (
+                    <TaskCard key={task.id} task={task} />
+                ))}
+            </div>
+        ) : (
+            <TaskTable tasks={dummyTasks}/>
+        )}
     </section>
     </div>
 </PageContainer>

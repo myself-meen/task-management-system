@@ -6,11 +6,14 @@ import Search from '../ui/Search';
 import Button from '../ui/Button';
 import { IoFilterOutline } from "react-icons/io5";
 import FilterMenuTask from '../ui/FilterSort/FilterMenuTask';
-import AddTask from '../forms/AddTask'
+import AddTask from '../forms/AddTask';
 import PageHeader from '../ui/PageHeader';
+import TaskCard from '../ui/TaskCard';
+import { useIsMobile } from './useIsMobile';
+
 function Tasks() {
-    const[addTask,setAddTask]=useState(false)
-    const[openFilter,setOpenFilter]=useState(false);
+    const [addTask, setAddTask] = useState(false);
+    const [openFilter, setOpenFilter] = useState(false);
     const dummyTasks = [
         {
             id: 1,
@@ -37,13 +40,14 @@ function Tasks() {
             assignee: "John Doe"
         }
     ];
+    const isMobile = useIsMobile();
 
     return ( <>
     <PageContainer>
        
     <div className='flex flex-col gap-y-8'>
          <PageHeader head='Task Management' subhead='Oversee and track all organizational activities in real-time'/>
-        <section className='stats flex  gap-x-4 '>
+        <section className='stats flex flex-wrap gap-4'>
             <Card   title='Total' count={dummyTasks.length}/>
             <Card  title='Pending' count='0'/>
             <Card  title='In Progress' count='0'/>
@@ -56,19 +60,27 @@ function Tasks() {
         transition-all
         duration-150
         ease-in-out
-        active:scale-95 flex bg-white shadow-md gap-2 items-center' onClick={() => setOpenFilter(!openFilter)}><IoFilterOutline/> Filter</button>
+        active:scale-95 flex bg-white shadow-md gap-2 items-center' onClick={() => setOpenFilter(!openFilter)}><IoFilterOutline/> {isMobile?'':'Filter'}</button>
         {openFilter && <FilterMenuTask setOpenFilter={setOpenFilter}/>}
         <button  className='px-4 py-2  rounded-xl
         transition-all
         duration-150
         ease-in-out
         active:scale-95 flex  bg-[#4271D0]
-        text-white shadow-md gap-2 items-center' onClick={() => setAddTask(!addTask)}>Add Task</button>
+        text-white shadow-md gap-2 items-center' onClick={() => setAddTask(!addTask)}>{isMobile?'+':'Add Task'}</button>
        
         </div>
         </section>
-    <section className='recent-tasks'>
-<TaskTable tasks={dummyTasks}/>
+    <section className='tasks'>
+        {isMobile ? (
+            <div className="flex flex-col gap-4">
+                {dummyTasks.map(task => (
+                    <TaskCard key={task.id} task={task} />
+                ))}
+            </div>
+        ) : (
+            <TaskTable tasks={dummyTasks}/>
+        )}
     </section>
     </div>
     </PageContainer>

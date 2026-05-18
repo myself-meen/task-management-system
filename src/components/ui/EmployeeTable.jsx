@@ -31,12 +31,14 @@ function EmployeeTable({employees=[]}) {
             
             {employees.map((employee) => (
               <tr key={employee.id} className="hover:bg-gray-50">
-                 <td className="py-2 px-4 border-b border-[#C3C6D4] flex" >
-                     <Avatar  employee_name={employee.name}/>
-                     <span className='flex flex-col'>
-                     <span>{employee.name}</span>
-                     <span className='text-[#434652]'>{employee.email}</span>
-                     </span>
+                <td className="p-4 border-b border-[#C3C6D4]">
+                  <div className="inline-block align-middle">
+                    <Avatar employee_name={employee.name} />
+                  </div>
+                  <span className="inline-block align-middle ml-2">
+                    <div>{employee.name}</div>
+                    <div className="text-[#434652]">{employee.email}</div>
+                  </span>
                 </td>
                
                 <td className="py-2 px-4 border-b border-[#C3C6D4]">
