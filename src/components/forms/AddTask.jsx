@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from '../ui/Modal';
 
 function AddTask({ employees = [], onClose,onAddTask }) {
+    // 1. State to track form errors
+    const [errors, setErrors] = useState({});
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
+
+        // 2. Validation Logic
+        const newErrors = {};
+        
+        if (!data.name || !data.name.trim()) {
+            newErrors.name = "Task Name is required.";
+        }
+        if (!data.dueDate) {
+            newErrors.dueDate = "Due Date is required.";
+        }
+        if (!data.assignee) {
+            newErrors.assignee = "Please select an assignee.";
+        }
+
+        // 3. If there are errors, stop submission and show them!
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
         console.log("POST New Task:", data);
         // TODO: Connect to backend API to POST data
         onAddTask(data);
@@ -27,6 +50,7 @@ function AddTask({ employees = [], onClose,onAddTask }) {
             <div>
                 <label htmlFor="taskName" className="block text-sm font-medium text-[#434652] mb-1">Task Name</label>
                 <input type="text" id="taskName" name="name" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" placeholder="Enter task name" />
+                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
             <div>
                 <label htmlFor="description" className="block text-sm font-medium text-[#434652] mb-1">Description</label>
@@ -53,6 +77,7 @@ function AddTask({ employees = [], onClose,onAddTask }) {
                 <div className="flex-1">
                     <label htmlFor="dueDate" className="block text-sm font-medium text-[#434652] mb-1">Due Date</label>
                     <input type="date" id="dueDate" name="dueDate" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" />
+                    {errors.dueDate && <p className="text-red-500 text-xs mt-1">{errors.dueDate}</p>}
                 </div>
             </div>
             <div>
@@ -63,6 +88,7 @@ function AddTask({ employees = [], onClose,onAddTask }) {
                         <option key={employee.id} value={employee.id}>{employee.name}</option>
                     ))}
                 </select>
+                {errors.assignee && <p className="text-red-500 text-xs mt-1">{errors.assignee}</p>}
             </div>
         </div>
         

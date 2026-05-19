@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from '../ui/Modal';
 function AddEmployee({onClose,onAddEmployee}) {
+    // 1. State to track form errors
+    const [errors, setErrors] = useState({});
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
+        
+        // 2. Validation Logic
+        const newErrors = {};
+        
+        if (!data.name || !data.name.trim()) {
+            newErrors.name = "Full Name is required.";
+        }
+        
+        if (!data.email || !data.email.trim()) {
+            newErrors.email = "Email Address is required.";
+        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+            newErrors.email = "Please enter a valid email address.";
+        }
+
+        // 3. If there are errors, stop submission and show them!
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return; 
+        }
+
         console.log("POST New Employee:", data);
         //  Connect to backend API to POST data
         onAddEmployee(data);
@@ -26,10 +49,12 @@ function AddEmployee({onClose,onAddEmployee}) {
                 <div className="flex-1">
                     <label htmlFor="name" className="block text-sm font-medium text-[#434652] mb-1">Full Name</label>
                     <input type="text" id="name" name="name" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" placeholder="Enter full name" />
+                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                 </div>
                 <div className="flex-1">
                     <label htmlFor="email" className="block text-sm font-medium text-[#434652] mb-1">Email Address</label>
                     <input type="email" id="email" name="email" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" placeholder="Enter email address" />
+                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
             </div>
             
