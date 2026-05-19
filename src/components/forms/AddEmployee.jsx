@@ -1,12 +1,14 @@
 import React from 'react';
 import Modal from '../ui/Modal';
-function AddEmployee({onClose}) {
+function AddEmployee({onClose,onAddEmployee}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
         console.log("POST New Employee:", data);
         //  Connect to backend API to POST data
+        onAddEmployee(data);
+        onClose();
     };
 
     return ( <>
@@ -35,17 +37,17 @@ function AddEmployee({onClose}) {
                 <div className="flex-1">
                     <label htmlFor="department" className="block text-sm font-medium text-[#434652] mb-1">Department</label>
                     <select name="department" id="department" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
-                        <option value="it">IT</option>
-                        <option value="marketing">Marketing</option>
-                        <option value="sales">Sales</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Design">Design</option>
+                        <option value="Management">Management</option>
                     </select>
                 </div>
                 <div className="flex-1">
                     <label htmlFor="role" className="block text-sm font-medium text-[#434652] mb-1">Role</label>
                     <select name="role" id="role" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
-                        <option value="developer">Developer</option>
-                        <option value="designer">Designer</option>
-                        <option value="manager">Manager</option>
+                        <option value="Developer">Developer</option>
+                        <option value="Designer">Designer</option>
+                        <option value="Manager">Manager</option>
                     </select>
                 </div>
             </div>
@@ -54,7 +56,7 @@ function AddEmployee({onClose}) {
         {/* Footer Section */}
         <div className="bg-[#F2F3FB] border-t border-[#C3C6D4] -mb-6 -mx-6 mt-6 p-4 px-6 rounded-b-lg flex justify-end gap-3">
             <button onClick={onClose} type="button" className="px-4 py-2 border border-[#C3C6D4] bg-white text-[#434652] rounded-md text-sm font-medium hover:bg-gray-50 transition-colors">Cancel</button>
-            <button type="submit" className="px-4 py-2 bg-[#4271D0] text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">Add Employee</button>
+            <button type="submit" className="px-4 py-2 bg-[#4271D0] text-white rounded-md text-sm font-medium hover:bg-blue-600 transition-colors ">Add Employee</button>
         </div>
     </form>
 

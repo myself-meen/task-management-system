@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import PageContainer from '../layout/PageContainer';
+import PageContainer from '../components/layout/PageContainer';
 
-import Avatar from '../ui/Avatar';
-import TaskTable from '../ui/TaskTable';
-import Card from '../ui/Card';
-import PageHeader from '../ui/PageHeader';
-import TaskCard from '../ui/TaskCard';
-import { useIsMobile } from './useIsMobile';
+import Card from '../components/ui/Card';
+import PageHeader from '../components/ui/PageHeader';
+import TaskCard from '../components/ui/TaskCard';
+import TaskTable from '../components/ui/Table/TaskTable';
+import { useIsMobile } from '../CustomHooks/useIsMobile';
+import { usePagination } from '../CustomHooks/usePagination';
+import Pagination from '../components/ui/Pagination';
 
 function Dashboard() {
     const dummyTasks = [
@@ -36,6 +36,8 @@ function Dashboard() {
         }
     ];
 const isMobile = useIsMobile();
+const { currentPage, totalPages, currentData, handlePrev, handleNext } = usePagination(dummyTasks);
+
     return ( <>
     
     <PageContainer>
@@ -51,9 +53,10 @@ const isMobile = useIsMobile();
      <section className='tasks'>
         {isMobile ? (
             <div className="flex flex-col gap-4">
-                {dummyTasks.map(task => (
+                {currentData.map(task => (
                     <TaskCard key={task.id} task={task} />
                 ))}
+                <Pagination currentPage={currentPage} totalPages={totalPages} handlePrev={handlePrev} handleNext={handleNext} />
             </div>
         ) : (
             <TaskTable tasks={dummyTasks}/>

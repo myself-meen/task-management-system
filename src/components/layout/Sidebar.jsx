@@ -23,7 +23,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
 
   const handleLinkClick = (linkName) => {
     setIsActive(linkName);
-    if (window.innerWidth < 768) { // md breakpoint
+    if (window.innerWidth < 768) { 
       setIsSidebarOpen(false);
     }
   };

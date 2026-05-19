@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import Badge from './Badge';
-import Avatar from './Avatar';
+import React, { useEffect, useState } from 'react';
+import Badge from '../Badge';
+import Avatar from '../Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ThreeDotMenu from './ThreeDotMenu';
-import EditTask from '../forms/EditTask';
-
-function TaskTable({ tasks = [] }) {
+import ThreeDotMenu from '../ThreeDotMenu';
+import EditTask from '../../forms/EditTask';
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { useClickOutside } from '../../../CustomHooks/useClickOutside';
+import { usePagination } from '../../../CustomHooks/usePagination';
+function TaskTable({ tasks = [],onDeleteTask }) {
   // Tracks which row's menu is open
   const [openMenuId, setOpenMenuId] = useState(null);
   // Tracks which task is actively being edited in the modal
   const [editingTask, setEditingTask] = useState(null);
+  const { currentPage, totalPages, currentData, handlePrev, handleNext } = usePagination(tasks);
+  
 
     return ( <>
     <div className="overflow-x-auto rounded-md">
@@ -31,34 +36,35 @@ function TaskTable({ tasks = [] }) {
           </thead>
           <tbody>
             
-            {tasks.map((task) => (
-              <tr key={task.id} className="hover:bg-gray-50  py-4 px-4">
-                <td className="p-4 border-b border-[#C3C6D4] ">{task.name}</td>
-                <td className=" border-b border-[#C3C6D4]">
+            {currentData.map((task) => (
+              <tr key={task.id} className="hover:bg-gray-50 px-4 py-4 ">
+                <td className="p-6 border-b border-[#C3C6D4] ">{task.name}</td>
+                <td className="py-2 px-4 border-b border-[#C3C6D4]">
                   <Badge stat={task.priority} />
                 </td>
-                <td className=" border-b border-[#C3C6D4]">
+                <td className="py-2 px-4 border-b border-[#C3C6D4]">
                   <Badge stat={task.status} />
                 </td>
-                <td className=" border-b border-[#C3C6D4]">
+                <td className="py-2 px-4 border-b border-[#C3C6D4]">
                   <span>{task.dueDate}</span>
                 </td>
-                <td className="p-4 border-b border-[#C3C6D4]" >
+                <td className="py-2 px-4 border-b border-[#C3C6D4]" >
                      <div className="inline-block align-middle">
                        <Avatar employee_name={task.assignee}/>
                      </div>
                      <span className="inline-block align-middle">{task.assignee}</span>
                 </td>
                 {/* Added 'relative' so the dropdown anchors to this cell */}
-                <td className=" border-b border-[#C3C6D4] relative">
+                <td className="py-2 px-4 border-b border-[#C3C6D4] relative">
                   <button onClick={() => setOpenMenuId(openMenuId === task.id ? null : task.id)}>
                     <BsThreeDotsVertical/>
                   </button>
                   {openMenuId === task.id && (
                     <ThreeDotMenu 
                       onEdit={() => { setEditingTask(task); setOpenMenuId(null); }} 
-                      onDelete={() => console.log('Delete task:', task.id)} //Add Backend delete logic.
-                      onComplete={() => console.log('Complete task:', task.id)} //Add backend logic
+                      onDelete={()=>onDeleteTask(task.id)} //Add Backend delete logic.
+                      onComplete={() => console.log('Complete task:', task.id)} 
+                      onClose={()=>setOpenMenuId(null)}//Add backend logic
                     />
                   )}
                 </td>
@@ -69,10 +75,10 @@ function TaskTable({ tasks = [] }) {
             <tr>
               <td colSpan="6" className="py-3 px-4 border-t border-[#C3C6D4]">
                 <div className="flex justify-between items-center text-sm text-[#434652]">
-                  <span>Showing {tasks.length} tasks</span>
+                  <span>Showing {currentData.length} of {tasks.length} tasks</span>
                   <div className="flex gap-2">
-                    <button className="px-3 py-1 border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors">Previous</button>
-                    <button className="px-3 py-1  border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors">Next</button>
+                    <button disabled={currentPage === 1} onClick={handlePrev} className="px-3 py-1 border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><FaArrowLeftLong/></button>
+                    <button disabled={currentPage === totalPages||totalPages===0} onClick={handleNext} className="px-3 py-1  border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><FaArrowRightLong/></button>
                   </div>
                 </div>
               </td>

@@ -1,15 +1,20 @@
 import React from 'react';
-import Avatar from './Avatar';
+import Avatar from '../Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ThreeDotMenuEmp from './ThreeDotMenuEmp';
-import EditEmployee from '../forms/EditEmployee'
+import ThreeDotMenuEmp from '../ThreeDotMenuEmp';
+import EditEmployee from '../../forms/EditEmployee'
 import { useState } from 'react';
-
-
-function EmployeeTable({employees=[]}) {
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { usePagination } from '../../../CustomHooks/usePagination';
+function EmployeeTable({employees=[],onDeleteEmployee}) {
   const [openMenuId, setOpenMenuId] = useState(null);
   
     const [editingEmployee, setEditingEmployee] = useState(null);
+   
+    
+     
+      const { currentPage, totalPages, currentData, handlePrev, handleNext } = usePagination(employees);
     return ( <>
     <div className="overflow-x-auto rounded-md">
         <table className="min-w-full bg-white border border-[#C3C6D4] ">
@@ -29,7 +34,7 @@ function EmployeeTable({employees=[]}) {
           </thead>
           <tbody>
             
-            {employees.map((employee) => (
+            {currentData.map((employee) => (
               <tr key={employee.id} className="hover:bg-gray-50">
                 <td className="p-4 border-b border-[#C3C6D4]">
                   <div className="inline-block align-middle">
@@ -51,7 +56,8 @@ function EmployeeTable({employees=[]}) {
                   {openMenuId === employee.id && (
                     <ThreeDotMenuEmp 
                       onEdit={() => { setEditingEmployee(employee); setOpenMenuId(null); }} 
-                      onRemove={() => console.log('Delete employee:', employee.id)} //Add Backend delete logic.
+                      onRemove={() => onDeleteEmployee(employee.id)}
+                      onClose={()=>setOpenMenuId(null)} //Add Backend delete logic.
                           />
                   )}
                  
@@ -66,10 +72,10 @@ function EmployeeTable({employees=[]}) {
             <tr>
               <td colSpan="6" className="py-3 px-4 border-t border-[#C3C6D4]">
                 <div className="flex justify-between items-center text-sm text-[#434652]">
-                  <span>Showing {employees.length} employees</span>
+                  <span>Showing {currentData.length} of {employees.length} employees</span>
                   <div className="flex gap-2">
-                    <button className="px-3 py-1 border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors">Previous</button>
-                    <button className="px-3 py-1  border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors">Next</button>
+                                      <button disabled={currentPage === 1} onClick={handlePrev} className="px-3 py-1 border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><FaArrowLeftLong/></button>
+                                      <button disabled={currentPage === totalPages||totalPages===0} onClick={handleNext} className="px-3 py-1  border border-[#C3C6D4] rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><FaArrowRightLong/></button>
                   </div>
                 </div>
               </td>

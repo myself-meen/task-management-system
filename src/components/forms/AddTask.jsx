@@ -1,14 +1,17 @@
 import React from 'react';
 import Modal from '../ui/Modal';
 
-function AddTask({ employees = [], onClose }) {
+function AddTask({ employees = [], onClose,onAddTask }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
         console.log("POST New Task:", data);
         // TODO: Connect to backend API to POST data
+        onAddTask(data);
+        onClose();
     };
+
 
     return ( <>
    <Modal>
@@ -23,7 +26,7 @@ function AddTask({ employees = [], onClose }) {
         <div className="flex flex-col gap-4">
             <div>
                 <label htmlFor="taskName" className="block text-sm font-medium text-[#434652] mb-1">Task Name</label>
-                <input type="text" id="taskName" name="taskName" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" placeholder="Enter task name" />
+                <input type="text" id="taskName" name="name" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" placeholder="Enter task name" />
             </div>
             <div>
                 <label htmlFor="description" className="block text-sm font-medium text-[#434652] mb-1">Description</label>
@@ -41,10 +44,10 @@ function AddTask({ employees = [], onClose }) {
                 <div className="flex-1">
                     <label htmlFor='status' className="block text-sm font-medium text-[#434652] mb-1">Status</label>
                     <select id="status" name="status" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
-                        <option value="todo">Pending</option>
-                        <option value="inprogress">In Progress</option>
-                        <option value="review">Overdue</option>
-                        <option value="done">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="in progress">In Progress</option>
+                        <option value="overdue">Overdue</option>
+                        <option value="completed">Completed</option>
                     </select>
                 </div>
                 <div className="flex-1">
