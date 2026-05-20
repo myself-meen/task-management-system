@@ -10,6 +10,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   const [isActive, setIsActive] = useState("dashboard");
   const location = useLocation();
 
+
   useEffect(() => {
     const path = location.pathname;
     if (path === '/') {
@@ -32,14 +33,14 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
     <>
     
       <section
-        className={`bg-[#ECEDF5] flex-col h-screen p-6 gap-y-4 fixed top-0 left-0 z-50 w-full md:w-64 ${
+        className={` group bg-[#ECEDF5] flex-col h-screen p-6 gap-y-4 fixed top-0 left-0 z-50 w-full md:w-20 md:hover:w-64 ${
           isSidebarOpen ? 'flex' : 'hidden'
         } md:flex`}
       >
         <div className='logo-section flex items-center justify-between gap-4'>
           <div className='flex items-center gap-4'>
             <img src={logo} alt="TaskFlow Logo" />
-            <h1 className='text-2xl font-bold self-start text-[#4271D0]'>TaskFlow</h1>
+            <h1 className='md:hidden md:group-hover:block text-2xl font-bold self-start text-[#4271D0]'>TaskFlow</h1>
           </div>
           {/* Close Button for Mobile */}
           <button className="md:hidden text-2xl text-[#434652]" onClick={() => setIsSidebarOpen(false)}>
@@ -48,20 +49,20 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
         </div>
         <div className='w-full'>
           <nav className='flex flex-col gap-y-4'>
-            <Link to='/' onClick={() => handleLinkClick("dashboard")} className={`flex flex-row p-2 items-center gap-4 w-full rounded-md px-4 pr-12 py-2
+            <Link to='/' onClick={() => handleLinkClick("dashboard")} className={`  flex flex-row p-2 items-center gap-4 rounded-md md:group-hover:px-4 md:group-hover:pr-12  md:group-hover:py-2 
               ${isActive === "dashboard" ? "bg-[#4271D0] text-white" : "text-[#434652]"}`}>
-              <RiDashboardLine />
-              <span>Dashboard</span>
+              <RiDashboardLine  />
+              <span className='md:hidden md:group-hover:block max-w-md:block'>Dashboard</span>
             </Link>
-            <Link onClick={() => handleLinkClick("tasks")} to='/tasks' className={`flex flex-row p-2 items-center gap-4 w-full rounded-md px-4 pr-12 py-2
+            <Link onClick={() => handleLinkClick("tasks")} to='/tasks' className={`flex flex-row p-2 items-center gap-4  rounded-md md:group-hover:px-4 md:group-hover:pr-12 md:group-hover:py-2
               ${isActive === "tasks" ? "bg-[#4271D0] text-white" : "text-[#434652]"}`}>
               <BiTask />
-              <span>Tasks</span>
+              <span className='md:hidden md:group-hover:block max-w-md:block'>Tasks</span>
             </Link>
-            <Link onClick={() => handleLinkClick("employees")} to='/employees' className={`flex flex-row p-2 items-center gap-4 w-full rounded-md px-4 pr-12 py-2
+            <Link onClick={() => handleLinkClick("employees")} to='/employees' className={`flex flex-row p-2 items-center gap-4  rounded-md md:group-hover:px-4 md:group-hover:pr-12 md:group-hover:py-2
               ${isActive === "employees" ? "bg-[#4271D0] text-white" : "text-[#434652]"}`}>
               <MdOutlinePeople />
-              <span>Employees</span>
+              <span className='md:hidden md:group-hover:block max-w-md:block'>Employees</span>
             </Link>
           </nav>
         </div>

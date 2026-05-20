@@ -1,20 +1,17 @@
+
 import React, { useEffect, useState } from 'react';
-import Badge from '../Badge';
-import Avatar from '../Avatar';
+import Badge from '../ui/Badge';
+import Avatar from '../ui/Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ThreeDotMenu from '../ThreeDotMenu';
-import EditTask from '../../forms/EditTask';
+import ThreeDotMenu from '../ui/ThreeDotMenu';
+import EditTask from '../forms/EditTask';
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { useClickOutside } from '../../../CustomHooks/useClickOutside';
-import { usePagination } from '../../../CustomHooks/usePagination';
-function TaskTable({ tasks = [],onDeleteTask }) {
-  // Tracks which row's menu is open
-  const [openMenuId, setOpenMenuId] = useState(null);
-  // Tracks which task is actively being edited in the modal
-  const [editingTask, setEditingTask] = useState(null);
-  const { currentPage, totalPages, currentData, handlePrev, handleNext } = usePagination(tasks);
-  
+import { useClickOutside } from '../../CustomHooks/useClickOutside';
+import { usePagination } from '../../CustomHooks/usePagination';
+function RecentTasksTable({tasks=[]}) {
+    const { currentPage, totalPages, currentData, handlePrev, handleNext } = usePagination(tasks);
+    const [editingTask, setEditingTask] = useState(null);
 
     return ( <>
     <div className="overflow-x-auto rounded-md">
@@ -31,7 +28,7 @@ function TaskTable({ tasks = [],onDeleteTask }) {
               <th className="py-2 px-4  text-left uppercase">status</th>
               <th className="py-2 px-4  text-left uppercase">due date</th>
               <th className="py-2 px-4  text-left uppercase">assignee</th>
-              <th className="py-2 px-4  text-left uppercase"></th>
+            
             </tr>
           </thead>
           <tbody>
@@ -55,19 +52,7 @@ function TaskTable({ tasks = [],onDeleteTask }) {
                      <span className="inline-block align-middle">{task.assignee}</span>
                 </td>
                 {/* Added 'relative' so the dropdown anchors to this cell */}
-                <td className="py-2 px-4 border-b border-[#C3C6D4] relative">
-                  <button onClick={() => setOpenMenuId(openMenuId === task.id ? null : task.id)}>
-                    <BsThreeDotsVertical/>
-                  </button>
-                  {openMenuId === task.id && (
-                    <ThreeDotMenu 
-                      onEdit={() => { setEditingTask(task); setOpenMenuId(null); }} 
-                      onDelete={()=>onDeleteTask(task.id)} //Add Backend delete logic.
-                      onComplete={() => console.log('Complete task:', task.id)} 
-                      onClose={()=>setOpenMenuId(null)}//Add backend logic
-                    />
-                  )}
-                </td>
+                
               </tr>
             ))}
           </tbody>
@@ -92,4 +77,4 @@ function TaskTable({ tasks = [],onDeleteTask }) {
 </> );
 }
 
-export default TaskTable;
+export default RecentTasksTable;

@@ -70,7 +70,7 @@ function AddTask({ employees = [], onClose,onAddTask }) {
                     <select id="status" name="status" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
                         <option value="pending">Pending</option>
                         <option value="in progress">In Progress</option>
-                        <option value="overdue">Overdue</option>
+                        
                         <option value="completed">Completed</option>
                     </select>
                 </div>
@@ -85,7 +85,7 @@ function AddTask({ employees = [], onClose,onAddTask }) {
                 <select id="assignee" name="assignee" className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
                     <option value="" disabled selected>Select assignee</option>
                     {employees.map((employee) => (
-                        <option key={employee.id} value={employee.id}>{employee.name}</option>
+                        <option key={employee.id} value={employee.name}>{employee.name}</option>
                     ))}
                 </select>
                 {errors.assignee && <p className="text-red-500 text-xs mt-1">{errors.assignee}</p>}

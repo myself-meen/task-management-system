@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Avatar from './Avatar';
+import Avatar from '../ui/Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ThreeDotMenuEmp from './ThreeDotMenuEmp';
+import ThreeDotMenuEmp from '../ui/ThreeDotMenuEmp';
 import EditEmployee from '../forms/EditEmployee';
 
-function EmployeeCard({ employee }) {
+function EmployeeCard({ employee, onDeleteEmployee, onEditEmployee }) {
     const [openMenu, setOpenMenu] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null);
 
@@ -25,7 +25,8 @@ function EmployeeCard({ employee }) {
                 <div className="absolute top-10 right-4">
                     <ThreeDotMenuEmp 
                         onEdit={() => { setEditingEmployee(employee); setOpenMenu(false); }} 
-                        onRemove={() => console.log('Delete employee:', employee.id)}
+                        onRemove={() => { onDeleteEmployee(employee.id); setOpenMenu(false); }}
+                        onClose={() => setOpenMenu(false)}
                     />
                 </div>
             )}
@@ -35,7 +36,7 @@ function EmployeeCard({ employee }) {
             <div className='bg-[#F2F3FB] text-[#4271D0] px-3 py-1 rounded-md text-xs font-medium'>{employee.role}</div>
         </div>
     </div>
-    {editingEmployee && <EditEmployee employee={editingEmployee} onClose={() => setEditingEmployee(null)} />}
+    {editingEmployee && <EditEmployee employee={editingEmployee} onClose={() => setEditingEmployee(null)} onEditEmployee={onEditEmployee} />}
     </> );
 }
 

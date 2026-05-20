@@ -1,13 +1,13 @@
 import React from 'react';
-import Avatar from '../Avatar';
+import Avatar from '../ui/Avatar';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ThreeDotMenuEmp from '../ThreeDotMenuEmp';
-import EditEmployee from '../../forms/EditEmployee'
+import ThreeDotMenuEmp from '../ui/ThreeDotMenuEmp';
+import EditEmployee from '../forms/EditEmployee';
 import { useState } from 'react';
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { usePagination } from '../../../CustomHooks/usePagination';
-function EmployeeTable({employees=[],onDeleteEmployee}) {
+import { usePagination } from '../../CustomHooks/usePagination';
+function EmployeeTable({employees=[],onDeleteEmployee, onEditEmployee}) {
   const [openMenuId, setOpenMenuId] = useState(null);
   
     const [editingEmployee, setEditingEmployee] = useState(null);
@@ -83,7 +83,7 @@ function EmployeeTable({employees=[],onDeleteEmployee}) {
           </tfoot>
         </table>
       </div>
-      {editingEmployee && <EditEmployee employee={editingEmployee} onClose={() => setEditingEmployee(null)} />}
+      {editingEmployee && <EditEmployee employee={editingEmployee} onClose={() => setEditingEmployee(null)} onEditEmployee={onEditEmployee} />}
     </> );
 }
 

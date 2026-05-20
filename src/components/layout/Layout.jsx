@@ -11,7 +11,7 @@ function Layout() {
 
       <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-      <div className="flex-1 md:ml-64">
+      <div className="flex-1 md:ml-20">
 
         <TopNavbar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
 

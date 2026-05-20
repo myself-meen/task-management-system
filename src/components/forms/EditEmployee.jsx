@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '../ui/Modal';
 
-function EditEmployee({ employee = {}, onClose }) {
+function EditEmployee({ employee = {}, onClose, onEditEmployee }) {
     const [errors, setErrors] = useState({});
 
     const handleSubmit = (e) => {
@@ -26,6 +26,8 @@ function EditEmployee({ employee = {}, onClose }) {
             return; 
         }
 
+        onEditEmployee(employee.id, data);
+        onClose();
         console.log("PUT/PATCH Edit Employee:", data);
         // Connect to backend API to update data
     };

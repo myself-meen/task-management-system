@@ -1,18 +1,50 @@
 import React, { useState } from 'react';
 import Modal from '../ui/Modal';
 
-function EditTask({ task = {}, onClose }) {
+import { useLocalStorage } from '../../CustomHooks/useLocalStorage';
+
+function EditTask({ task = {}, onClose, onEditTask }) {
     const [errors, setErrors] = useState({});
+
+    const [employees] = useLocalStorage('app_employees', [
+        {
+            id: 1,
+            name: "John Doe",
+            email: "john.doe@example.com",
+            department: "Engineering",
+            role: "Frontend Developer"
+        },
+        {
+            id: 2,
+            name: "Jane Smith",
+            email: "jane.smith@example.com",
+            department: "Design",
+            role: "UI/UX Designer"
+        },
+        {
+            id: 3,
+            name: "Michael Johnson",
+            email: "michael.j@example.com",
+            department: "Management",
+            role: "Project Manager"
+        },
+        {
+            id: 4,
+            name: "Sarah Williams",
+            email: "sarah.w@example.com",
+            department: "Engineering",
+            role: "Backend Developer"
+        }
+    ]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
-
         const newErrors = {};
         
-        if (!data.taskName || !data.taskName.trim()) {
-            newErrors.taskName = "Task Name is required.";
+        if (!data.name || !data.name.trim()) {
+            newErrors.name = "Task Name is required.";
         }
         if (!data.dueDate) {
             newErrors.dueDate = "Due Date is required.";
@@ -25,7 +57,8 @@ function EditTask({ task = {}, onClose }) {
             setErrors(newErrors);
             return;
         }
-
+        onEditTask(task.id, data); // Use task.id since the form doesn't contain the ID
+        onClose();
         console.log("PUT/PATCH Edit Task:", data);
         //  Connect to backend API to update data
     };
@@ -43,8 +76,8 @@ function EditTask({ task = {}, onClose }) {
         <div className="flex flex-col gap-4">
             <div>
                 <label htmlFor="taskName" className="block text-sm font-medium text-[#434652] mb-1">Task Name</label>
-                <input type="text" id="taskName" name="taskName" defaultValue={task.name} className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" placeholder="Enter task name" />
-                {errors.taskName && <p className="text-red-500 text-xs mt-1">{errors.taskName}</p>}
+                <input type="text" id="taskName" name="name" defaultValue={task.name} className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0]" placeholder="Enter task name" />
+                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
             <div>
                 <label htmlFor="description" className="block text-sm font-medium text-[#434652] mb-1">Description</label>
@@ -64,7 +97,6 @@ function EditTask({ task = {}, onClose }) {
                     <select id="status" name="status" defaultValue={task.status || "todo"} className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
                         <option value="todo">Pending</option>
                         <option value="inprogress">In Progress</option>
-                        <option value="review">Overdue</option>
                         <option value="done">Completed</option>
                     </select>
                 </div>
@@ -77,8 +109,10 @@ function EditTask({ task = {}, onClose }) {
             <div>
                 <label htmlFor="assignee" className="block text-sm font-medium text-[#434652] mb-1">Assignee</label>
                 <select id="assignee" name="assignee" defaultValue={task.assignee} className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white">
-                    <option value="john">John Doe</option>
-                    <option value="jane">Jane Smith</option>
+                    <option value="" disabled>Select assignee</option>
+                    {employees.map((employee) => (
+                        <option key={employee.id} value={employee.name}>{employee.name}</option>
+                    ))}
                 </select>
                 {errors.assignee && <p className="text-red-500 text-xs mt-1">{errors.assignee}</p>}
             </div>

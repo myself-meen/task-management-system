@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Badge from './Badge';
+import Badge from '../ui/Badge';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ThreeDotMenu from './ThreeDotMenu';
+import ThreeDotMenu from '../ui/ThreeDotMenu';
 import EditTask from '../forms/EditTask';
 
-function TaskCard({ task }) {
+function TaskCard({ task, onDeleteTask, onEditTask }) {
     const [openMenu, setOpenMenu] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
 
@@ -25,8 +25,9 @@ function TaskCard({ task }) {
             <div className="absolute top-12 right-4">
                 <ThreeDotMenu 
                     onEdit={() => { setEditingTask(task); setOpenMenu(false); }} 
-                    onDelete={() => console.log('Delete task:', task.id)}
-                    onComplete={() => console.log('Complete task:', task.id)}
+                    onDelete={() => { onDeleteTask(task.id); setOpenMenu(false); }}
+                    onComplete={() => { onEditTask(task.id, { status: "completed" }); setOpenMenu(false); }}
+                    onClose={() => setOpenMenu(false)}
                 />
             </div>
         )}
@@ -38,7 +39,8 @@ function TaskCard({ task }) {
         </div>
 
     </div>
-    {editingTask && <EditTask task={editingTask} onClose={() => setEditingTask(null)} />}
+    {editingTask && <EditTask task={editingTask} onClose={() => setEditingTask(null)} onEditTask={onEditTask} />}
+        
     </> );
 }
 
