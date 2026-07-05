@@ -9,7 +9,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { useClickOutside } from '../../CustomHooks/useClickOutside';
 import { usePagination } from '../../CustomHooks/usePagination';
 import Employees from '../../pages/Employees';
-function TaskTable({ tasks = [],onDeleteTask,onEditTask , employees }) {
+function TaskTable({ tasks = [], onDeleteTask, onEditTask, employees, ensureEmployees }) {
   // Tracks which row's menu is open
   const [openMenuId, setOpenMenuId] = useState(null);
   // Tracks which task is actively being edited in the modal
@@ -63,7 +63,7 @@ function TaskTable({ tasks = [],onDeleteTask,onEditTask , employees }) {
                   {openMenuId === task.id && (
                     <ThreeDotMenu 
                       isCompleted={String(task.status || '').trim().toLowerCase() === 'completed'}
-                      onEdit={() => { setEditingTask(task); setOpenMenuId(null); }} 
+                      onEdit={async () => { if (ensureEmployees) await ensureEmployees(); setEditingTask(task); setOpenMenuId(null); }} 
                       onDelete={()=>onDeleteTask(task.id)} 
                       onComplete={() => {
                           if (String(task.status || '').trim().toLowerCase() !== 'completed') {

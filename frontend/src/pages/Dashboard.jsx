@@ -1,110 +1,248 @@
-import React, { useState } from 'react';
-import PageContainer from '../components/layout/PageContainer';
-import Card from '../components/card/Card';
-import PageHeader from '../components/ui/PageHeader';
-import TaskCard from '../components/card/TaskCard';
-import TaskTable from '../components/Table/TaskTable';
-import { useIsMobile } from '../CustomHooks/useIsMobile';
-import { usePagination } from '../CustomHooks/usePagination';
-import Pagination from '../components/ui/Pagination';
-import { useLocalStorage } from '../CustomHooks/useLocalStorage';
-import AddTask from '../components/forms/AddTask';
-import RecentTasksTable from '../components/Table/RecentTasksTable';
-import { useEffect } from 'react';
-import { getTasks } from '../services/taskService';
-import { getEmployees } from '../services/employeeService';
+import React, { useEffect, useState } from 'react'
+
+import PageContainer from '../components/layout/PageContainer'
+import Card from '../components/card/Card'
+import PageHeader from '../components/ui/PageHeader'
+import RecentTasksTable from '../components/table/RecentTasksTable'
+import RecentTaskCard from '../components/card/RecentTaskCard'
+import Pagination from '../components/ui/Pagination'
+
+import { useIsMobile } from '../CustomHooks/useIsMobile'
+import { usePagination } from '../CustomHooks/usePagination'
+
+import { getDashboardData } from '../services/dashboardService'
 
 function Dashboard() {
-       const [tasks, setTasks] = useState([]);
-       const [employees, setEmployees] = useState([]);
-           useEffect(()=>{
-               fetchTasks();
-               fetchEmployees();
-           },[])
-           const fetchTasks=async()=>{
-               try{
-                   const data = await getTasks()
-                   const formattedTasks=data.map((task)=>{
-                       return{
-                           id:task.task_id,
-                           name:task.task_name,
-                           priority:task.task_priority,
-                           status:task.task_status,
-                            dueDate: task.task_dueDate
-    ? new Date(task.task_dueDate)
-        .toISOString()
-        .split('T')[0]
-    : '',
-                           assignee:task.employee_name
-                       }
-                   })
-                   setTasks(formattedTasks);
-               }
-               catch(error){
-       console.log(error)
-               }
-           }
 
-           const fetchEmployees = async () => {
-               try {
-                   const data = await getEmployees();
-                   setEmployees(data);
-               } catch (error) {
-                   console.log(error);
-               }
-           };
+    const [tasks, setTasks] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [errorMessage, setErrorMessage] = useState('')
 
-        const handleDeleteTask = (id) => {
-            const updatedTasks = tasks.filter((task) => task.id !== id);
-            setTasks(updatedTasks);
-        };
+    const [statistics, setStatistics] = useState({
 
-        const handleEditTask = (id, updatedTaskData) => {
-            const updatedTasks = tasks.map((task) => {
-                if (task.id === id) {
-                    return { ...task, ...updatedTaskData };
+        total_tasks: 0,
+        completed_tasks: 0,
+        pending_tasks: 0,
+        total_employees: 0
+
+    })
+
+
+
+    useEffect(() => {
+
+        fetchDashboard()
+
+    }, [])
+
+
+
+    const fetchDashboard = async () => {
+        setIsLoading(true)
+        setErrorMessage('')
+
+        try {
+            const data = await getDashboardData()
+            const statisticsData = data.statistics?.[0]
+            const employeeData = data.employees?.[0]
+
+            if (!statisticsData || !employeeData) {
+                throw new Error('Dashboard data is unavailable right now.')
+            }
+
+            setStatistics({
+
+                total_tasks: statisticsData.total_tasks,
+                completed_tasks: statisticsData.completed_tasks,
+                pending_tasks: statisticsData.pending_tasks,
+                total_employees: employeeData.total_employees
+
+            })
+
+            const formattedTasks = data.recent_tasks.map((task) => {
+
+                return {
+
+                    id: task.task_id,
+                    name: task.task_name,
+                    priority: task.task_priority,
+                    status: task.task_status,
+
+                    dueDate: task.task_dueDate
+
+                        ? new Date(task.task_dueDate)
+                            .toISOString()
+                            .split('T')[0]
+
+                        : '',
+
+                    assignee: task.employee_name
+
                 }
-                return task;
-            });
-            setTasks(updatedTasks);
-        };
-       
-        const isMobile = useIsMobile();
-        const completedCount = tasks.filter(task => String(task.status || '').trim().toLowerCase() === 'completed').length;
-        const pendingCount = tasks.filter(task => String(task.status || '').trim().toLowerCase() === 'pending').length;
-        const employeeCount = employees.length;
-        const { currentPage, totalPages, currentData, handlePrev, handleNext } = usePagination(tasks);
+
+            })
 
 
 
-    return ( <>
-    
-    <PageContainer>
-<div className='flex flex-col gap-y-8'>
-    <PageHeader head='Dashboard' subhead='Oversee statistics and most recent activity'/>
-        <section className='stats flex flex-wrap md:justify-between gap-4'>
-            <Card   title='Total' count={tasks.length}/>
-            <Card  title='Completed' count={completedCount}/>
-            <Card  title='Pending' count={pendingCount}/>
-            <Card  title='Employees' count={employeeCount}/>
-        </section>
-        <h1 className='text-2xl font-bold text-[#434652]'>Recent Tasks</h1>
-<section className='tasks'>
-        {isMobile ? (
-            <div className="flex flex-col gap-4">
-                {currentData.map(task => (
-                    <TaskCard key={task.id} task={task} onDeleteTask={handleDeleteTask} onEditTask={handleEditTask}  />
-                ))}
-                <Pagination currentPage={currentPage} totalPages={totalPages} handlePrev={handlePrev} handleNext={handleNext} />
+            setTasks(formattedTasks)
+
+        }
+
+        catch(error) {
+            setErrorMessage(error.message || 'Unable to load dashboard data.')
+        }
+        finally {
+            setIsLoading(false)
+        }
+
+    }
+
+
+    const isMobile = useIsMobile()
+
+
+
+    const {
+
+        currentPage,
+        totalPages,
+        currentData,
+        handlePrev,
+        handleNext
+
+    } = usePagination(tasks)
+
+
+
+    return (
+
+        <PageContainer>
+
+            <div className='flex flex-col gap-y-8'>
+
+                <PageHeader
+
+                    head='Dashboard'
+
+                    subhead='Oversee statistics and most recent activity'
+
+                />
+
+
+
+                <section className='stats flex flex-wrap md:justify-between gap-4'>
+
+                    <Card
+
+                        title='Total Tasks'
+
+                        count={statistics.total_tasks}
+
+                    />
+
+
+
+                    <Card
+
+                        title='Completed'
+
+                        count={statistics.completed_tasks}
+
+                    />
+
+
+
+                    <Card
+
+                        title='Pending'
+
+                        count={statistics.pending_tasks}
+
+                    />
+
+
+
+                    <Card
+
+                        title='Total Employees'
+
+                        count={statistics.total_employees}
+
+                    />
+
+                </section>
+
+
+
+                <h1 className='text-2xl font-bold text-[#434652]'>
+
+                    Recent Tasks
+
+                </h1>
+
+
+
+                <section className='tasks'>
+                    {isLoading ? (
+                        <div className='rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500'>Loading recent tasks...</div>
+                    ) : errorMessage ? (
+                        <div className='rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-600'>{errorMessage}</div>
+                    ) : (
+                        isMobile ? (
+
+                            <div className="flex flex-col gap-4">
+
+                                {
+
+                                    currentData.map((task) => (
+
+                                        <RecentTaskCard
+
+                                            key={task.id}
+
+                                            task={task}
+
+                                        />
+
+                                    ))
+
+                                }
+
+
+
+                                <Pagination
+
+                                    currentPage={currentPage}
+
+                                    totalPages={totalPages}
+
+                                    handlePrev={handlePrev}
+
+                                    handleNext={handleNext}
+
+                                />
+
+                            </div>
+
+                        ) : (
+
+                            <RecentTasksTable
+
+                                tasks={tasks}
+
+                            />
+
+                        )
+                    )}
+
+                </section>
+
             </div>
-        ) : (
-            <RecentTasksTable tasks={tasks}  />
-        )}
-    </section>
-    </div>
-    </PageContainer>
-     
-    </> );
+
+        </PageContainer>
+
+    )
+
 }
 
-export default Dashboard;
+export default Dashboard

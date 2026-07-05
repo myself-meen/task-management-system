@@ -4,10 +4,9 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import ThreeDotMenu from '../ui/ThreeDotMenu';
 import EditTask from '../forms/EditTask';
 
-function TaskCard({ task, onDeleteTask, onEditTask, employees }) {
+function TaskCard({ task, onDeleteTask, onEditTask, employees, ensureEmployees, hideMenu = false }) {
     const [openMenu, setOpenMenu] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
-
     const isCompleted = String(task.status || '').trim().toLowerCase() === 'completed'
 
     return ( <>
@@ -19,15 +18,17 @@ function TaskCard({ task, onDeleteTask, onEditTask, employees }) {
          </div>
         <div className="flex items-center gap-2">
             <Badge stat={task.priority}/>
-            <button onClick={() => setOpenMenu(!openMenu)}>
-                <BsThreeDotsVertical />
-            </button>
+            {!hideMenu && (
+                <button onClick={() => setOpenMenu(!openMenu)}>
+                    <BsThreeDotsVertical />
+                </button>
+            )}
         </div>
-        {openMenu && (
+        {!hideMenu && openMenu && (
             <div className="absolute top-12 right-4">
                 <ThreeDotMenu 
                     isCompleted={isCompleted}
-                    onEdit={() => { setEditingTask(task); setOpenMenu(false); }} 
+                    onEdit={async () => { if (ensureEmployees) await ensureEmployees(); setEditingTask(task); setOpenMenu(false); }} 
                     onDelete={() => { onDeleteTask(task.id); setOpenMenu(false); }}
                     onComplete={() => {
                         if (!isCompleted) {

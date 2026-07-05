@@ -112,6 +112,7 @@ function EmployeeTable({
 
     employees = [],
     departments = [],
+    ensureDepartments,
     onDeleteEmployee,
     onEditEmployee
 
@@ -324,7 +325,9 @@ function EmployeeTable({
 
                                                 <ThreeDotMenuEmp
 
-                                                    onEdit={() => {
+                                                    onEdit={async () => {
+
+                                                        if (ensureDepartments) await ensureDepartments()
 
                                                         setEditingEmployee(employee)
 

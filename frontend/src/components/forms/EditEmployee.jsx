@@ -1,5 +1,6 @@
 import React, { useEffect,useState} from 'react'
 import Modal from '../ui/Modal'
+import { requestJson } from '../../services/api'
 function EditEmployee({
     employee = {},
     departments = [],
@@ -16,22 +17,28 @@ function EditEmployee({
         department_id: employee.department_id || '',
         role_id: employee.role_id || ''
     })
+
     useEffect(() => {
+        setFormData({
+            name: employee.name || '',
+            email: employee.email || '',
+            department_id: employee.department_id || '',
+            role_id: employee.role_id || ''
+        })
         if (employee.department_id) {
             fetchRoles(employee.department_id)
+        } else {
+            setRoles([])
         }
-    }, [])
+    }, [employee])
 
     const fetchRoles = async (departmentId) => {
         try {
-            const response = await fetch(
-                `http://127.0.0.1:5000/v1/roles?department=${departmentId}`
-            )
-            const data = await response.json()
+            const data = await requestJson(`/roles?department=${departmentId}`)
             setRoles(data)
         }
         catch(error) {
-            console.log(error)
+            setErrors((prev) => ({ ...prev, form: error.message || 'Unable to load roles.' }))
         }
 
     }
@@ -94,6 +101,15 @@ function EditEmployee({
             newErrors.email =
                 "Email Address cannot exceed 255 characters."
         }
+
+        if (!formData.department_id) {
+            newErrors.department_id = "Department is required."
+        }
+
+        if (!formData.role_id) {
+            newErrors.role_id = "Role is required."
+        }
+
         if (
 
             Object.keys(newErrors).length > 0
@@ -252,6 +268,13 @@ function EditEmployee({
 
                                 </select>
 
+                                {
+                                    errors.department_id && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.department_id}
+                                        </p>
+                                    )
+                                }
                             </div>
                             <div className="flex-1">
 
@@ -296,6 +319,14 @@ function EditEmployee({
                                     }
 
                                 </select>
+
+                                {
+                                    errors.role_id && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.role_id}
+                                        </p>
+                                    )
+                                }
 
                             </div>
 

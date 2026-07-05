@@ -15,6 +15,7 @@ function EmployeeCard({
 
     employee,
     departments = [],
+    ensureDepartments,
     onDeleteEmployee,
     onEditEmployee
 
@@ -101,7 +102,9 @@ function EmployeeCard({
 
                                 <ThreeDotMenuEmp
 
-                                    onEdit={() => {
+                                    onEdit={async () => {
+
+                                        if (ensureDepartments) await ensureDepartments()
 
                                         setEditingEmployee(employee)
 

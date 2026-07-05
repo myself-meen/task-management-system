@@ -1,6 +1,7 @@
 
 import React, { useState,useEffect} from 'react'
 import Modal from '../ui/Modal'
+import { buildApiUrl, requestJson } from '../../services/api'
 function AddEmployee({
     onClose,
     onAddEmployee
@@ -14,28 +15,21 @@ function AddEmployee({
     }, [])
     const fetchDepartments = async () => {
         try {
-            const response = await fetch(
-                'http://127.0.0.1:5000/v1/departments'
-            )
-            const data = await response.json()
+            const data = await requestJson('/departments')
             setDepartments(data)
         }
         catch(error) {
-            console.log(error)
+            setErrors((prev) => ({ ...prev, form: error.message || 'Unable to load departments.' }))
         }
 
     }
     const fetchRoles = async (departmentId) => {
         try {
-            const response = await fetch(
-                `http://127.0.0.1:5000/v1/roles?department=${departmentId}`
-
-            )
-            const data = await response.json()
+            const data = await requestJson(`/roles?department=${departmentId}`)
             setRoles(data)
         }
         catch(error) {
-            console.log(error)
+            setErrors((prev) => ({ ...prev, form: error.message || 'Unable to load roles.' }))
         }
 
     }
@@ -102,6 +96,15 @@ function AddEmployee({
             newErrors.email =
                 "Email Address cannot exceed 255 characters."
         }
+
+        if (!data.department_id) {
+            newErrors.department_id = "Department is required."
+        }
+
+        if (!data.role_id) {
+            newErrors.role_id = "Role is required."
+        }
+
         if (
 
             Object.keys(newErrors).length > 0
@@ -122,7 +125,6 @@ function AddEmployee({
             role_id: data.role_id
         }
 
-        console.log(employeeData)
         onAddEmployee(employeeData)
         onClose()
     }
@@ -250,15 +252,13 @@ function AddEmployee({
 
                                     id="department"
 
-                                    onChange={(e) =>
-
-                                        fetchRoles(
-
-                                            e.target.value
-
-                                        )
-
-                                    }
+                                    onChange={(e) => {
+                                        const value = e.target.value
+                                        if (!value) {
+                                            setRoles([])
+                                        }
+                                        fetchRoles(value)
+                                    }}
 
                                     className="w-full border border-[#C3C6D4] rounded-md p-2 text-sm focus:outline-none focus:border-[#4271D0] bg-white"
 
@@ -293,6 +293,12 @@ function AddEmployee({
                                     }
 
                                 </select>
+
+                                {errors.department_id && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                        {errors.department_id}
+                                    </p>
+                                )}
 
                             </div>
 
@@ -353,6 +359,12 @@ function AddEmployee({
                                     }
 
                                 </select>
+
+                                {errors.role_id && (
+                                    <p className="text-red-500 text-xs mt-1">
+                                        {errors.role_id}
+                                    </p>
+                                )}
 
                             </div>
 
